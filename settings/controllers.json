@@ -1,0 +1,75 @@
+{
+    "xbox360": {
+        "type": "xinput",
+        "buttons": [
+            "up",
+            "down",
+            "left",
+            "right",
+            "start",
+            "back",
+            "left stick click",
+            "right stick click",
+            "left bumper",
+            "right bumper",
+            "",
+            "",
+            "a",
+            "b",
+            "x",
+            "y"
+        ],
+        "left_trigger": {
+            "max": 255,
+            "min": 0
+        },
+        "right_trigger": {
+            "max": 255,
+            "min": 0
+        },
+        "l_thumb_x": {
+            "max": 32767,
+            "min": -32768,
+            "scale": 2,
+            "shift": -1,
+            "deadzone": 4915
+        },
+        "l_thumb_y": {
+            "max": 32767,
+            "min": -32768,
+            "scale": 2,
+            "shift": -1,
+            "deadzone": 4915
+        },
+        "r_thumb_x": {
+            "max": 32767,
+            "min": -32768,
+            "scale": 2,
+            "shift": -1,
+            "deadzone": 4915
+        },
+        "r_thumb_y": {
+            "max": 32767,
+            "min": -32768,
+            "scale": 2,
+            "shift": -1,
+            "deadzone": 4915
+        },
+        "compound": {
+            "left": {
+                "stick": {
+                    "x": "l_thumb_x",
+                    "y": "l_thumb_y"
+                },
+                "trigger": "left_trigger"
+            },
+            "right": {
+                "stick": {
+                    "x": "r_thumb_x",
+                    "y": "r_thumb_y"
+                },
+                "trigger": "right_trigger"
+            }
+        }
+    }
+}

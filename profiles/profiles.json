@@ -1,0 +1,110 @@
+{
+    "minecraft": {
+        "controller": "xbox360",
+        "id": 0,
+        "mappings": {
+            "right stick x": {
+                "type": "mouse x",
+                "exp": 2.2,
+                "speed": 1000
+            },
+            "right stick y": {
+                "type": "mouse y",
+                "exp": 2.2,
+                "speed": -1200
+            },
+            "left stick y": {
+                "type": "threshold state",
+                "threshold": 0.5,
+                "target": "w"
+            },
+            "l_thumb_y": {
+                "type": "threshold state",
+                "threshold": -0.5,
+                "target": "s"
+            },
+            "left stick x": {
+                "type": "threshold state",
+                "threshold": 0.5,
+                "target": "d"
+            },
+            "l_thumb_x": {
+                "type": "threshold state",
+                "threshold": -0.5,
+                "target": "a"
+            },
+            
+            "left trigger": {
+                "type": "threshold click",
+                "threshold": 0.5,
+                "target": "left"
+            },
+            "right trigger": {
+                "type": "threshold click",
+                "threshold": 0.5,
+                "target": "left"
+            },
+            "right bumper": {
+                "type": "click",
+                "target": "right"
+            },
+            
+            "start":
+            {
+                "type": "state",
+                "target": "VK_ESCAPE"
+            },
+            "left bumper":
+            {
+                "type": "state",
+                "target": "VK_CONTROL"
+            },
+            "left stick click": {
+                "type": "state",
+                "target": "VK_SHIFT"
+            },
+            "right stick click": {
+                "type": "click",
+                "target": "middle"
+            },
+            
+            "up": {
+                "type": "state",
+                "target": "t"
+            },
+            "left": {
+                "type": "state",
+                "target": "1"
+            },
+            "right": {
+                "type": "state",
+                "target": "2"
+            },
+            "down": {
+                "type": "state",
+                "target": "h"
+            },
+            
+            "a":
+            {
+                "target": "VK_SPACE",
+                "type": "state"
+            },
+            "b":
+            {
+                "type": "state",
+                "target": "q"
+            },
+            "x":
+            {
+                "type": "scroll y",
+                "amount": 1
+            },
+            "y":
+            {
+                "type": "scroll y",
+                "amount": -1
+            }
+        }
+    }
+}
