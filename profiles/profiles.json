@@ -3,108 +3,43 @@
         "controller": "xbox360",
         "id": 0,
         "mappings": {
-            "right stick x": {
-                "type": "mouse x",
+            "right stick": {
+                "action": "move mouse on move",
                 "exp": 2.2,
-                "speed": 1000
+                "x speed": 1000,
+                "y speed": -1200,
+                "x component": "x",
+                "y component": "y"
             },
-            "right stick y": {
-                "type": "mouse y",
-                "exp": 2.2,
-                "speed": -1200
-            },
-            "left stick y": {
-                "type": "threshold state",
-                "threshold": 0.5,
-                "target": "w"
-            },
-            "l_thumb_y": {
-                "type": "threshold state",
-                "threshold": -0.5,
-                "target": "s"
-            },
-            "left stick x": {
-                "type": "threshold state",
-                "threshold": 0.5,
-                "target": "d"
-            },
-            "l_thumb_x": {
-                "type": "threshold state",
-                "threshold": -0.5,
-                "target": "a"
-            },
+            "left stick": [
+                { "threshold": ["y", 0.4, 1], "action": "w on hold" },
+                { "threshold": ["y", -1, -0.4], "action": "s on hold" },
+                { "threshold": ["x", -1, -0.4], "action": "a on hold" },
+                { "threshold": ["x", 0.4, 1], "action": "d on hold" }
+            ],
             
-            "left trigger": {
-                "type": "threshold click",
-                "threshold": 0.5,
-                "target": "left"
-            },
-            "right trigger": {
-                "type": "threshold click",
-                "threshold": 0.5,
-                "target": "left"
-            },
-            "right bumper": {
-                "type": "click",
-                "target": "right"
-            },
+            "left trigger":
+                { "action": "left click on hold", "threshold": [0.5, 1]},
+            "right trigger":
+                { "action": "left click on hold", "threshold": [0.5, 1]},
+            "right bumper": "right click on hold",
             
-            "start":
-            {
-                "type": "state",
-                "target": "VK_ESCAPE"
-            },
-            "left bumper":
-            {
-                "type": "state",
-                "target": "VK_CONTROL"
-            },
-            "left stick click": {
-                "type": "state",
-                "target": "VK_SHIFT"
-            },
-            "right stick click": {
-                "type": "click",
-                "target": "middle"
-            },
+            "start": "VK_ESCAPE on hold",
+            "left bumper": "VK_CONTROL on hold",
+            "left stick click": "VK_SHIFT on hold",
+            "right stick click": "middle click on hold",
             
-            "up": {
-                "type": "state",
-                "target": "t"
-            },
-            "left": {
-                "type": "state",
-                "target": "1"
-            },
-            "right": {
-                "type": "state",
-                "target": "2"
-            },
-            "down": {
-                "type": "state",
-                "target": "h"
-            },
+            "left": "1 on press",
+            "right":
+                { "action": "scroll y on press", "amount": -1},
+            "down": "h on hold",
             
-            "a":
-            {
-                "target": "VK_SPACE",
-                "type": "state"
-            },
-            "b":
-            {
-                "type": "state",
-                "target": "q"
-            },
+            "a": "VK_SPACE on hold",
+            "b": "q on press",
             "x":
-            {
-                "type": "scroll y",
-                "amount": 1
-            },
+                { "action": "scroll y on press", "amount": 1},
             "y":
-            {
-                "type": "scroll y",
-                "amount": -1
-            }
+                { "action": "scroll y on press", "amount": -1}
         }
     }
 }

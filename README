@@ -9,3 +9,9 @@ It is V2 because I made an earlier version a couple months ago in Java, but it w
 TODO:
  * Refactor everything (including profiles.json and controller.json)
  * Select DLL correct xinput dynamically
+ 
+## settings/controllers.json
+This file describes all of the controllers supported by the program.
+
+## profiles/*.json
+These files describe the actual mapping of controller inputs to keyboard/mouse actions.

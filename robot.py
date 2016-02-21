@@ -153,8 +153,8 @@ def placeMouse(x, y):
 
 def scrollWheel(y=0, x=0):
     """ Scroll the wheel in terms of wheel clicks """
-    x *= WHEEL_DELTA
-    y *= WHEEL_DELTA
+    x = int(x * WHEEL_DELTA)
+    y = int(y * WHEEL_DELTA)
     if x != 0 and y != 0:
         i = INPUT(type=INPUT_MOUSE,
                   mi=MOUSEINPUT(dx=0, dy=0, mouseData=x,
