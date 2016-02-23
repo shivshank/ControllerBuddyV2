@@ -61,17 +61,8 @@ class XInputController:
         # synthesize a dict out of the axes to represent the vector
         # (n.b, vectors can be described in terms of compound identifiers;
         #    we will assume though that they do map to only axes)
-        vec = dict((k, self._mapIdentifier(v)) 
+        vec = dict((k, self.getInput(self._mapIdentifier(v)[1])[2]) 
                     for k, v in info.items() if k != "normalize")
-        # normalize the values, apply axis dead zone if it's specified
-        for k, v in vec.items():
-            try:
-                # v is of form (type, identifier)
-                vec[k] = self.normalize(state, *v)
-            except TypeError:
-                raise TypeError("Vector component can only map to an axis, "
-                              + "component " + k + " of " + identifier
-                              + " is invalid")
         # apply vector normalization
         self.normalizeVector(vec, identifier)
         return vec
@@ -92,12 +83,14 @@ class XInputController:
             if raw == 0:
                 return 0
         
-        return (raw - rMin)/(rMax - rMin)
+        out = (raw - rMin)/(rMax - rMin)
+        out = out * info.get('scale', 1) + info.get('shift', 0)
+        return out
     def applyRawDeadzone(self, val, dz, rMin, rMax):
         """ Apply a dead zone to a raw axis value.
                 Raw in this context is referring to the value before it is
-                mapped to the range [0, 1]; this dead zone is in terms of the raw
-                value reported by XInput.
+                mapped to the range [0, 1]; this dead zone is in terms of the
+                raw value reported by XInput.
             -> val, new min, new max
         """
         if abs(val) <= dz:
@@ -121,19 +114,20 @@ class XInputController:
                 -> None; modifies valDict in place
         """
         info = self.descriptor['vector'][identifier].get('normalize', {})
-        magnitude = 0
+        magnitude = math.sqrt(sum(v**2 for v in valDict.values()))
         dz = info.get('deadzone', 0)
+        # if the sqrt(magnitude) is <= dz, replace all values with zero, return
+        if magnitude <= dz:
+            for k in valDict.keys():
+                valDict[k] = 0
+            return
+        # otherwise, scale and shift each component and remove the deadzone
         for k, v in valDict.items():
             # apply the scale and shifts
             v = v * info.get('scale', 1) + info.get('shift', 0)
-            # compute the magnitude as we go
-            magnitude += v * v
-            # assume we are not in the deadzone and calculate the value
-            valDict[k] = math.copysign(abs(v) - dz, v)/(1 - dz)
-        # if the sqrt(magnitude) is <= dz, replace all values with zero
-        if magnitude <= dz * dz:
-            for k, v in valDict.items():
-                valDict[k] = 0
+            # remove the deadzone from the calculation by normalizing the
+            # component and then scaling it
+            valDict[k] = v/magnitude * (magnitude - dz)/(1 - dz)
     def _mapIdentifier(self, identifier):
         """ maps an identifier -> (input type, input name/index) """
         # is identifier a button name?
@@ -195,10 +189,22 @@ class Profile:
             raise TypeError('Only vector types are supported for move mouse')
         info = trigger['info']
         vec = [c[info['x component']], c[info['y component']]]
+        # raise input values to a power to control sensitivity
         vec[0] = math.copysign(abs(vec[0])**info.get('exp', 1), vec[0])
         vec[1] = math.copysign(abs(vec[1])**info.get('exp', 1), vec[1])
-        robot.translateMouse(info['x speed'] * dt * vec[0],
-                             info['y speed'] * dt * vec[1])
+        # get the length of this vector
+        magnitude = math.sqrt(vec[0]**2 + vec[1]**2)
+        if vec[0] == 0 or vec[1] == 0:
+            # catch x/0 errors
+            scale = 1
+        else:
+            # given that magnitude*sec = h/cos and csc = h/sin
+            # use sec if (cos==x) > (sin==y) else use csc
+            scale = magnitude/max(abs(vec[0]), abs(vec[1]))
+
+        robot.translateMouse(scale * info['x speed'] * dt * vec[0],
+                             scale * info['y speed'] * dt * vec[1])
+
     def onHold(self, trigger, dt):
         t, p, c = self.controller.getInput(trigger['triggerSource'])
         p, c = self._areInputsActive(trigger['info'], t, p, c)
@@ -226,6 +232,8 @@ class Profile:
         raise NotImplementedError("On repeat not yet implemented")
     def press(self, response, info=None):
         self.pressed.append(response)
+        if info.get('pressed', None) is not None:
+            print(info['debug'])
         if response == "left click":
             robot.mouseButton(robot.MOUSEEVENTF_LEFTDOWN)
         elif response == "right click":

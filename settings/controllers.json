@@ -31,19 +31,27 @@
         },
         "l_thumb_x": {
             "max": 32767,
-            "min": -32768
+            "min": -32768,
+            "scale": 2,
+            "shift": -1
         },
         "l_thumb_y": {
             "max": 32767,
-            "min": -32768
+            "min": -32768,
+            "scale": 2,
+            "shift": -1
         },
         "r_thumb_x": {
             "max": 32767,
-            "min": -32768
+            "min": -32768,
+            "scale": 2,
+            "shift": -1
         },
         "r_thumb_y": {
             "max": 32767,
-            "min": -32768
+            "min": -32768,
+            "scale": 2,
+            "shift": -1
         },
         "compound": {
             "left": {
@@ -66,18 +74,14 @@
                 "x": "left stick x",
                 "y": "left stick y",
                 "normalize": {
-                    "scale": 2,
-                    "shift": -1,
-                    "deadzone": 0.2
+                    "deadzone": 0.15
                 }
             },
             "right stick": {
                 "x": "right stick x",
                 "y": "right stick y",
                 "normalize": {
-                    "scale": 2,
-                    "shift": -1,
-                    "deadzone": 0.2
+                    "deadzone": 0.15
                 }
             }
         }

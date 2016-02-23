@@ -2,6 +2,7 @@ import os
 import ctypes
 from ctypes import wintypes
 import time
+import math
 
 user32 = ctypes.WinDLL('user32', use_last_error=True)
 
@@ -135,7 +136,7 @@ def releaseKey(hexKeyCode):
     user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
 
 def translateMouse(dx, dy):
-    dx, dy = int(dx), int(dy)
+    dx, dy = math.ceil(dx), math.ceil(dy)
     """ Translate mouse in pixels """
     x = INPUT(type=INPUT_MOUSE,
               mi=MOUSEINPUT(dx=dx, dy=dy, mouseData=0,

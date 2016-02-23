@@ -12,10 +12,10 @@
                 "y component": "y"
             },
             "left stick": [
-                { "threshold": ["y", 0.4, 1], "action": "w on hold" },
-                { "threshold": ["y", -1, -0.4], "action": "s on hold" },
-                { "threshold": ["x", -1, -0.4], "action": "a on hold" },
-                { "threshold": ["x", 0.4, 1], "action": "d on hold" }
+                { "threshold": ["y", 0.4, 1.5], "action": "w on hold", "debug": "woah" },
+                { "threshold": ["y", -1.5, -0.4], "action": "s on hold" },
+                { "threshold": ["x", -1.5, -0.4], "action": "a on hold" },
+                { "threshold": ["x", 0.4, 1.5], "action": "d on hold" }
             ],
             
             "left trigger":
