@@ -2,24 +2,25 @@
     "minecraft": {
         "controller": "xbox360",
         "id": 0,
+        "debug": false,
         "mappings": {
             "right stick": {
                 "action": "move mouse on move",
                 "exp": 2.2,
-                "x speed": 1000,
-                "y speed": -1200,
+                "x speed": 800,
+                "y speed": -1000,
                 "x component": "x",
                 "y component": "y"
             },
             "left stick": [
-                { "threshold": ["y", 0.4, 1.5], "action": "w on hold", "debug": "woah" },
+                { "threshold": ["y", 0.4, 1.5], "action": "w on hold"},
                 { "threshold": ["y", -1.5, -0.4], "action": "s on hold" },
                 { "threshold": ["x", -1.5, -0.4], "action": "a on hold" },
                 { "threshold": ["x", 0.4, 1.5], "action": "d on hold" }
             ],
             
             "left trigger":
-                { "action": "left click on hold", "threshold": [0.5, 1]},
+                { "action": "left click on toggle", "threshold": [0.5, 1]},
             "right trigger":
                 { "action": "left click on hold", "threshold": [0.5, 1]},
             "right bumper": "right click on hold",
@@ -39,7 +40,9 @@
             "x":
                 { "action": "scroll y on press", "amount": 1},
             "y":
-                { "action": "scroll y on press", "amount": -1}
+                { "action": "scroll y on press", "amount": -1},
+            
+            "back": "abort on press"
         }
     }
 }

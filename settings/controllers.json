@@ -74,14 +74,14 @@
                 "x": "left stick x",
                 "y": "left stick y",
                 "normalize": {
-                    "deadzone": 0.15
+                    "deadzone": 0.2
                 }
             },
             "right stick": {
                 "x": "right stick x",
                 "y": "right stick y",
                 "normalize": {
-                    "deadzone": 0.15
+                    "deadzone": 0.2
                 }
             }
         }

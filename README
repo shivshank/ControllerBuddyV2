@@ -2,12 +2,11 @@
 
 This is a controller mapping program for use with XInput Gamepads on Windows. It is a customizable python library using JSON to specify how the gamepad maps to the keyboard/mouse.
 
-Only supports XInput, using ctypes to interface with the dlls (user32 and xinput1_3). The source is a mess right now and this should only work on windows. Hopefully all of that will change. _Should work on Windows 8/10, but you probably have to change the dll in xinput.py. May possibly not work on 32bit systems._
+Only supports XInput, using ctypes to interface with the dlls (user32 and xinput1_3). Hopefully all of that will change. _Should work on Windows 8/10, but you probably have to change the dll in xinput.py. May possibly not work on 32bit systems._
 
-It is V2 because I made an earlier version a couple months ago in Java, but it was "stuck" with GLFW  so I couldn't support XInput; aka, I couldn't separate the two triggers, which was a bit annoying. (I think I'm the first person using GLFW to say that I was stuck with it!)
+It is V2 because I made an earlier version a couple months ago in Java, but it was "stuck" with GLFW  so I couldn't support XInput; aka, I couldn't separate the two triggers, which was a bit annoying.
 
 TODO:
- * Refactor everything (including profiles.json and controller.json)
  * Select DLL correct xinput dynamically
  
 ## settings/controllers.json

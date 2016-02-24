@@ -61,7 +61,7 @@ class XInputController:
         # synthesize a dict out of the axes to represent the vector
         # (n.b, vectors can be described in terms of compound identifiers;
         #    we will assume though that they do map to only axes)
-        vec = dict((k, self.getInput(self._mapIdentifier(v)[1])[2]) 
+        vec = dict((k, self.normalize(state, *self._mapIdentifier(v))) 
                     for k, v in info.items() if k != "normalize")
         # apply vector normalization
         self.normalizeVector(vec, identifier)
@@ -165,6 +165,10 @@ class XInputController:
             # doesn't appear to map to anything
             return None
 
+class AbortException(Exception):
+    def __init__(self, message):
+        super(AbortException, self).__init__(message)
+        
 class Profile:
     def __init__(self, name, profiles, controllerTypes):
         profile = profiles[name]
@@ -173,14 +177,19 @@ class Profile:
         self.id = profile['id']
         self.mappings = profile["mappings"]
         self.triggers = []
-        self.pressed = []
-        
-        self.validTriggerTypes = ("hold", "press", "release", "repeat", "move")
+        self.pressed = set()
+        self.validTriggerTypes = ("hold", "press", "release", "repeat", "move",
+                                  "toggle")
         self._parseMappings()
+        self.debug = profile.get('debug', False)
     def step(self, dt):
         self.controller.poll(self.id)
         for t in self.triggers:
-            getattr(self, 'on' + t['triggerType'].capitalize())(t, dt)
+            try:
+                getattr(self, 'on' + t['triggerType'].capitalize())(t, dt)
+            except AbortException as e:
+                self.releaseAll()
+                raise e
     def onMove(self, trigger, dt):
         if trigger['response'] != 'move mouse':
             raise NotImplementedError('Only move mouse is defined for onMove')
@@ -204,7 +213,15 @@ class Profile:
 
         robot.translateMouse(scale * info['x speed'] * dt * vec[0],
                              scale * info['y speed'] * dt * vec[1])
-
+    def onToggle(self, trigger, dt):
+        t, p, c = self.controller.getInput(trigger['triggerSource'])
+        p, c = self._areInputsActive(trigger['info'], t, p, c)
+        if not p and c:
+            # user just pressed the input
+            if trigger['response'] not in self.pressed:
+                self.press(trigger['response'], trigger['info'])
+            else:
+                self.release(trigger['response'], trigger['info'])
     def onHold(self, trigger, dt):
         t, p, c = self.controller.getInput(trigger['triggerSource'])
         p, c = self._areInputsActive(trigger['info'], t, p, c)
@@ -231,9 +248,13 @@ class Profile:
     def onRepeat(self, trigger, dt):
         raise NotImplementedError("On repeat not yet implemented")
     def press(self, response, info=None):
-        self.pressed.append(response)
-        if info.get('pressed', None) is not None:
-            print(info['debug'])
+        info = info or {}
+        # record that this trigger was responded to
+        self.pressed.add(response)
+        # check if we need to display a debug message
+        if self.debug or info.get('debug', None):
+            print('pressed', response, '; message:', info.get('debug', None))
+        # handle the response
         if response == "left click":
             robot.mouseButton(robot.MOUSEEVENTF_LEFTDOWN)
         elif response == "right click":
@@ -246,11 +267,16 @@ class Profile:
             robot.scrollWheel(x=info['amount'])
         elif response in robot.keys.keys():
             robot.pressKey(robot.keys[response])
+        elif response == "abort":
+            raise AbortException("Abort key pressed")
         else:
             # assume its a keyboard key
             robot.pressKey(robot.getKeyFromAscii(response))
     def release(self, response, info=None):
-        self.pressed.remove(response)
+        info = info or {}
+        self.pressed.discard(response)
+        if self.debug or info.get('debug', None):
+            print('\treleased', response, '; message:', info.get('debug', None))
         if response == "left click":
             robot.mouseButton(robot.MOUSEEVENTF_LEFTUP)
         elif response == "right click":
@@ -260,6 +286,8 @@ class Profile:
         elif response == "scroll y":
             pass
         elif response == "scroll x":
+            pass
+        elif response == "abort":
             pass
         elif response in robot.keys.keys():
             robot.releaseKey(robot.keys[response])
@@ -273,14 +301,17 @@ class Profile:
 
         th = info['threshold']
         if t == "axis":
+            # threshold will be of form [min, max]
             p = True if p >= th[0] and p <= th[1] else False
             c = True if c >= th[0] and c <= th[1] else False
             return p, c
         if t == "vector":
+            # threshold will be of form [component, min, max]
+            comp = th[0]
             vec = p
-            p = True if vec[th[0]] >= th[1] and vec[th[0]] <= th[2] else False
+            p = True if th[1] <= vec[comp] and vec[comp] <= th[2] else False
             vec = c
-            c = True if vec[th[0]] >= th[1] and vec[th[0]] <= th[2] else False
+            c = True if th[1] <= vec[comp] and vec[comp] <= th[2] else False
             return p, c
     def _parseMappings(self):
         for inputSrc, triggerDescriptor in self.mappings.items():
@@ -294,6 +325,7 @@ class Profile:
     def _parseMapping(self, src, descriptor):
         if type(descriptor) is str:
             action = descriptor
+            descriptor = {"action": action}
         else:
             try:
                 action = descriptor['action']
@@ -316,6 +348,10 @@ class Profile:
     def _parseAction(self, action):
         response, triggerType = action.split(" on ")
         return triggerType.strip(), response.strip()
+    def releaseAll(self):
+        for k in set(self.pressed):
+            self.release(k)
+        print('All keys released.')
 
 def readControllers():
     with open('./settings/controllers.json', mode='r') as file:
