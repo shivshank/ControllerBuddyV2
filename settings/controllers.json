@@ -85,5 +85,63 @@
                 }
             }
         }
+    },
+    "xbox360glfwTest": {
+        "type": "glfw",
+        "buttons": [
+            "a",
+            "b",
+            "x",
+            "y",
+            "left_bumper",
+            "right_bumper",
+            "back",
+            "start",
+            "left_stick_click",
+            "right_stick_click",
+            "up",
+            "right",
+            "down",
+            "left"
+        ]
+        "axes": [
+            "l_thumb_x",
+            "l_thumb_y",
+            "triggers",
+            "r_thumb_y",
+            "r_thumb_x"
+        ],
+        "compound": {
+            "left": {
+                "stick": {
+                    "x": "l_thumb_x",
+                    "y": "l_thumb_y"
+                },
+                "trigger": "left_trigger"
+            },
+            "right": {
+                "stick": {
+                    "x": "r_thumb_x",
+                    "y": "r_thumb_y"
+                },
+                "trigger": "right_trigger"
+            }
+        },
+        "vector": {
+            "left stick": {
+                "x": "left stick x",
+                "y": "left stick y",
+                "normalize": {
+                    "deadzone": 0.2
+                }
+            },
+            "right stick": {
+                "x": "right stick x",
+                "y": "right stick y",
+                "normalize": {
+                    "deadzone": 0.2
+                }
+            }
+        }
     }
 }
