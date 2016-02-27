@@ -3,7 +3,6 @@ import json
 import time
 import math
 import sys
-from collections import Iterable
 
 import xinput
 from xinput import NoControllerError
@@ -61,8 +60,9 @@ class XInputController:
         # synthesize a dict out of the axes to represent the vector
         # (n.b, vectors can be described in terms of compound identifiers;
         #    we will assume though that they do map to only axes)
-        vec = dict((k, self.normalize(state, *self._mapIdentifier(v))) 
+        vec = dict((k, self.normalize(state, *self._mapIdentifier(v)))
                     for k, v in info.items() if k != "normalize")
+
         # apply vector normalization
         self.normalizeVector(vec, identifier)
         return vec
@@ -359,9 +359,8 @@ def readControllers():
     
     controllerTypes = {}
     for k, v in data.items():
-        if v['type'] != "xinput":
-            raise NotImplementedError("Only XInput Controllers are supported.")
-        controllerTypes[k] = XInputController(k, v)
+        if v['type'] == "xinput":
+            controllerTypes[k] = XInputController(k, v)
     
     return controllerTypes
     
@@ -396,10 +395,12 @@ def loop(profile):
                 profile.step(dt)
                 elapsed -= dt
                 frames += 1
+    except AbortException:
+        pass
     except KeyboardInterrupt:
         pass
         
-    print(profile.pressed)
+    print('keys pressed:', list(profile.pressed))
     print('Quitting, did', frames, 'frames in', all,
           'seconds, fps:', frames/all)
 

@@ -136,7 +136,8 @@ def releaseKey(hexKeyCode):
     user32.SendInput(1, ctypes.byref(x), ctypes.sizeof(x))
 
 def translateMouse(dx, dy):
-    dx, dy = math.ceil(dx), math.ceil(dy)
+    dx = math.ceil(dx)
+    dy = math.ceil(dy)
     """ Translate mouse in pixels """
     x = INPUT(type=INPUT_MOUSE,
               mi=MOUSEINPUT(dx=dx, dy=dy, mouseData=0,
