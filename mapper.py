@@ -354,13 +354,21 @@ class Profile:
         print('All keys released.')
 
 def readControllers():
-    with open('./settings/controllers.json', mode='r') as file:
-        data = json.load(file)
+    # combine all the controller settings defined in ./settings
+    files = glob.glob('./controllers/*')
     
     controllerTypes = {}
+    for path in files:
+        with open(path, mode='r') as file:
+            data = json.load(file)
+        controllerTypes.update(data)
+    
+    # convert the controller JSON descriptions into controller options
     for k, v in data.items():
         if v['type'] == "xinput":
             controllerTypes[k] = XInputController(k, v)
+        else:
+            controllerTypes[k] = None
     
     return controllerTypes
     
@@ -371,8 +379,6 @@ def readProfiles():
     for path in files:        
         with open(path, mode='r') as file:
             data = json.load(file)
-        # the new syntax for 3.5 z = {**x, **y}
-        # may be too bleeding edge, so just do an old fashion .update
         profiles.update(data)
     
     return profiles
