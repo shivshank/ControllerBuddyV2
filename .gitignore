@@ -1,2 +1,11 @@
 __pycache__
 lib
+
+profiles/*
+controllers/*
+
+# ignore all files in these folders except the defaults
+# the defaults give a good indication of the format
+# in the event it's not documented (read: it's not documented ;D)
+!profiles/default.json
+!controllers/

@@ -6,9 +6,9 @@
         "mappings": {
             "right stick": {
                 "action": "move mouse on move",
-                "exp": 2.2,
-                "x speed": 800,
-                "y speed": -1000,
+                "exp": 2.9,
+                "x speed": 1200,
+                "y speed": -1500,
                 "x component": "x",
                 "y component": "y"
             },
